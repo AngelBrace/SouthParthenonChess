@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess at South Parthenon — The Escaper</title>
+  <meta name="description" content="Beginner-friendly guide to 3D chess at South Parthenon: how to move pieces, Predict vs Hint (tactical training vs puzzle coach), Chess-Stele UI, puzzles, Custom drills, and Tab quick board.">
+  <meta name="theme-color" content="#0f1419">
+  <style>
+    :root {
+      --bg: #0f1419;
+      --bg-elevated: #171e27;
+      --bg-card: #1c2530;
+      --border: #2a3644;
+      --text: #e8eef4;
+      --muted: #9aabb8;
+      --gold: #d4af37;
+      --cyan: #00ffff;
+      --blue: #0066ff;
+      --green: #73d687;
+      --orange: #ff9933;
+      --red: #f22e26;
+      --yellow: #e6d84a;
+      --radius: 12px;
+      --shadow: 0 12px 40px rgba(0,0,0,.45);
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+      --mono: "Cascadia Code", "Consolas", monospace;
+      --max: 920px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 102, 255, .12), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(212, 175, 55, .08), transparent);
+    }
+
+    a { color: var(--cyan); text-decoration-thickness: 1px; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+    /* Hero */
+    .hero {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .hero__badge {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--gold), #b8922e);
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.85rem, 5vw, 2.75rem);
+      line-height: 1.15;
+      margin: 0 0 .75rem;
+      font-weight: 700;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero__lead {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 42rem;
+      margin: 0;
+    }
+
+    /* Nav */
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(15, 20, 25, .92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      margin: 0 -1.25rem 2rem;
+      padding: .65rem 1.25rem;
+    }
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem 1rem;
+      font-size: .88rem;
+    }
+    .toc a { color: var(--muted); text-decoration: none; }
+    .toc a:hover { color: var(--cyan); }
+
+    /* Sections */
+    section { margin-bottom: 3rem; }
+    h2 {
+      font-size: 1.5rem;
+      margin: 0 0 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid var(--gold);
+      color: var(--text);
+    }
+    h3 { font-size: 1.15rem; margin: 1.75rem 0 .65rem; color: var(--cyan); }
+    h4 { font-size: 1rem; margin: 1.25rem 0 .5rem; }
+
+    p { margin: 0 0 1rem; }
+    ul, ol { margin: 0 0 1rem; padding-left: 1.35rem; }
+    li { margin-bottom: .35rem; }
+
+    .callout {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--blue);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      margin: 1.25rem 0;
+    }
+    .callout--tip { border-left-color: var(--green); }
+    .callout--warn { border-left-color: var(--orange); }
+    .callout strong { display: block; margin-bottom: .35rem; }
+
+    /* Figures / screenshots */
+    figure {
+      margin: 1.5rem 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+    figure img.missing {
+      min-height: 220px;
+      object-fit: cover;
+      background:
+        repeating-linear-gradient(-45deg, #1a2230, #1a2230 10px, #151b24 10px, #151b24 20px);
+    }
+    figcaption {
+      padding: .85rem 1rem;
+      font-size: .9rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    figcaption code {
+      font-family: var(--mono);
+      font-size: .85em;
+      color: var(--gold);
+    }
+
+    .fig-grid {
+      display: grid;
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    @media (min-width: 640px) {
+      .fig-grid--2 { grid-template-columns: 1fr 1fr; }
+      .fig-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+    th, td {
+      text-align: left;
+      padding: .55rem .75rem;
+      border: 1px solid var(--border);
+    }
+    th { background: var(--bg-elevated); color: var(--gold); font-weight: 600; }
+    tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+    /* Code / status sample */
+    pre.status {
+      font-family: var(--mono);
+      font-size: .9rem;
+      background: #0a0e12;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      margin: 1rem 0;
+      line-height: 1.5;
+      color: var(--green);
+    }
+
+    kbd {
+      font-family: var(--mono);
+      font-size: .85em;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: .1em .45em;
+      box-shadow: 0 2px 0 var(--border);
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .15em .55em;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--cyan);
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    /* Inline game-sprite glyphs */
+    .gi { height:1.2em; width:auto; vertical-align:middle; image-rendering:crisp-edges; }
+    .gi--orange { filter:sepia(1) saturate(10) hue-rotate(15deg); }
+    .gi--blue   { filter:sepia(1) saturate(6)  hue-rotate(200deg); }
+    .gi--red    { filter:sepia(1) saturate(8)  hue-rotate(330deg); }
+    .gi--green  { filter:sepia(1) saturate(5)  hue-rotate(95deg); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <span class="hero__badge">The Escaper</span>
+      <h1>Chess at <span>South Parthenon</span></h1>
+      <p class="hero__lead">
+        Walk your character onto the outdoor board, stand on your pieces to select them, and follow the
+        <strong style="color:var(--green)">green dots</strong> to see where you can move.
+        Start in <strong>Practice</strong> with <strong>Predict: On</strong> to learn how to play — or turn
+        <strong>Predict: Off</strong> when you want a clean board like a tournament player.
+      </p>
+    </header>
+
+    <nav class="toc" aria-label="On this page">
+      <ul>
+        <li><a href="#new-to-chess">New to chess?</a></li>
+        <li><a href="#learning-path">Learning path</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#board">3D board</a></li>
+        <li><a href="#2d-boards">2D boards</a></li>
+        <li><a href="#tactical">Overlays &amp; colors</a></li>
+        <li><a href="#front">Chess-Stele front</a></li>
+        <li><a href="#leorik">Leorik (advanced)</a></li>
+        <li><a href="#back">Chess-Stele back</a></li>
+        <li><a href="#puzzles">Puzzles</a></li>
+        <li><a href="#custom">Custom</a></li>
+        <li><a href="#tips">Tips</a></li>
+        <li><a href="#appendix-capture">Appendix</a></li>
+      </ul>
+    </nav>
+
+    <!-- NEW TO CHESS -->
+    <section id="new-to-chess">
+      <h2>New to chess?</h2>
+      <div class="callout callout--tip">
+        <strong>The goal</strong>
+        You play <strong>White</strong> — the computer plays <strong>Black</strong>.
+        Win by attacking the enemy king and achieving <strong>checkmate</strong> — the king is trapped with no safe escape.
+        Protect your own king while you attack theirs.
+      </div>
+
+      <h3>How the pieces move (quick reference)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Piece</th><th>Moves</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Pawn</strong></td><td>Forward one square (two squares on its very first move). Captures diagonally forward.</td></tr>
+            <tr><td><strong>Rook</strong></td><td>Straight lines — horizontal or vertical, any number of empty squares.</td></tr>
+            <tr><td><strong>Bishop</strong></td><td>Diagonals — any number of empty squares.</td></tr>
+            <tr><td><strong>Knight</strong></td><td>L-shape (2 squares one way, 1 square sideways). The only piece that can jump over others.</td></tr>
+            <tr><td><strong>Queen</strong></td><td>Any direction — horizontal, vertical, or diagonal. Most powerful piece.</td></tr>
+            <tr><td><strong>King</strong></td><td>One square in any direction. Never move into danger!</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Words you will see in this guide</h3>
+      <ul>
+        <li><strong>Legal move</strong> — a move allowed by the rules that does not leave your king in danger.</li>
+        <li><strong>Capture</strong> — move onto an enemy piece to remove it from the board.</li>
+        <li><strong>Checkmate</strong> — the enemy king is attacked with no safe escape. You win!</li>
+        <li><strong>Pending move</strong> — you have right-clicked a destination but have not confirmed it yet.</li>
+        <li><strong>Square names</strong> — columns A–H, rows 1–8 (e.g. <strong>E4</strong> = column E, row 4).</li>
+      </ul>
+
+      <h3>Your first five minutes</h3>
+      <ol>
+        <li>At the Chess-Stele front: set <strong>Level</strong> to <strong>0 Practice</strong> and <strong>Predict</strong> to <strong>On</strong>.</li>
+        <li>Press the green <strong>START</strong> button (it shows <strong>Playing</strong> while a game is active).</li>
+        <li>Walk onto a white <strong>Pawn</strong> or <strong>King</strong> — it turns <strong style="color:var(--blue)">blue</strong>.</li>
+        <li>Look for <strong style="color:var(--green)">green dots</strong> on the board — those squares are legal moves.</li>
+        <li>Right-click (<kbd>RMB</kbd>) a green square to set it as your target, then left-click / fire to confirm.</li>
+      </ol>
+    </section>
+
+    <!-- LEARNING PATH -->
+    <section id="learning-path">
+      <h2>Recommended learning path</h2>
+      <ol>
+        <li><strong>Practice (Level 0)</strong> — no computer opponent; learn how each piece moves with hints on.</li>
+        <li><strong>Custom → Piece vs Piece</strong> — one white + one black of the same type; drill a single piece alone (see <a href="#custom">Custom</a>).</li>
+        <li><strong>Easy (Level 1)</strong> — play a full game against a gentle computer opponent (Leorik).</li>
+        <li><strong>Puzzles</strong> — short "win in one move" challenges once you are comfortable moving pieces. Set <strong>Predict: Hint</strong> for the puzzle coach (see <a href="#puzzles">Puzzles</a>).</li>
+        <li><strong>Predict: Off</strong> — remove the training wheels when green dots and your own judgment are enough.</li>
+      </ol>
+      <p>The sections below are a full reference for controls, Chess-Stele buttons, and advanced options.</p>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h2>Overview</h2>
+      <figure>
+        <img src="images/01-south-parthenon-game.jpg" alt="South Parthenon with an active chess game on the outdoor board" width="1920" height="1080" loading="eager" onerror="this.classList.add('missing')">
+        <figcaption>
+          <strong>Figure 1.</strong> South Parthenon — outdoor 3D board during play.
+          Add your screenshot as <code>images/01-south-parthenon-game.jpg</code>
+        </figcaption>
+      </figure>
+      <ul>
+        <li><strong>3D play</strong> — stand on squares A1–H8, aim with the crosshair, and commit moves with fire.</li>
+        <li><strong>Chess-Stele front</strong> — Level, Style, Predict, Puzzles, Custom, green <strong>START</strong>, red <strong>Clear</strong>.</li>
+        <li><strong>Chess-Stele back</strong> — puzzle catalog, move History, or Custom layout + FEN editor.</li>
+        <li><strong>Practice (0)</strong> — no engine; safe space to learn movement and read the hints.</li>
+        <li><strong>Easy–Hard (1–4)</strong> — Leorik (computer) plays Black.</li>
+      </ul>
+      <div class="callout callout--warn">
+        <strong>Inside the Chess-Stele trigger</strong>
+        Weapon fire is blocked — the crosshair operates chess UI instead.
+      </div>
+    </section>
+
+    <!-- 3D BOARD -->
+    <section id="board">
+      <h2>On the 3D board</h2>
+
+      <p>
+        The <strong>Style</strong> setting on the Chess-Stele front switches between two presentations.
+        <strong>Standard</strong> moves happen instantly with flat circles on the board squares.
+        <strong>Wizard</strong> animates piece slides (~1 second per square) and adds glowing runic orbs and auras.
+        The legal-move rules are exactly the same either way — Style is purely visual.
+      </p>
+
+      <div class="fig-grid fig-grid--2">
+        <figure>
+          <img src="images/06-3d-board-selection.jpg" alt="White piece selected with green legal-move highlights on the outdoor board" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Stand on a white piece</strong> — green dots show where it can move. <code>06-3d-board-selection.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/07-standard-selection.jpg" alt="Orange ring on the square you are aiming at after RMB" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Aim + RMB</strong> — orange ring marks your pending destination. <code>07-standard-selection.jpg</code></figcaption>
+        </figure>
+      </div>
+
+      <h3>Standard vs Wizard — how it looks</h3>
+      <p>Same piece, same legal moves — different presentation. Toggle <strong>Style</strong> on the Chess-Stele front at any time.</p>
+      <div class="fig-grid fig-grid--2">
+        <figure>
+          <img src="images/18-wizard-selection.jpg" alt="Wizard style — glowing green orbs on legal move squares" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Wizard</strong> — glowing green orbs on legal squares. <code>18-wizard-selection.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/19-wizard-selection.jpg" alt="Wizard style — green orbs and orange selection aura on the pending square" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Wizard</strong> — green orbs + orange aura on your pending square. <code>19-wizard-selection.jpg</code></figcaption>
+        </figure>
+      </div>
+
+      <h3>Selecting a piece</h3>
+      <ul>
+        <li>Walk the <strong>Game Cage</strong> onto the chess board.</li>
+        <li>Stand on a <strong>white piece</strong> with legal moves — it turns <strong style="color:var(--blue)">blue</strong> and green dots appear on every square it can reach.</li>
+        <li>Stepping off to any empty square <strong>keeps</strong> your selection while you aim at a destination.</li>
+        <li>Step <strong>off the grid</strong> (outside A1–H8) to clear your selection and any pending move.</li>
+      </ul>
+
+      <h3>Making a move</h3>
+      <ul>
+        <li><kbd>RMB</kbd> (right-click) on a legal square or capturable black piece — sets the <strong>pending</strong> destination (orange ring).</li>
+        <li><kbd>LMB</kbd> (left-click) / fire — <strong>confirms</strong> the pending move. Your piece slides to the target.</li>
+        <li><kbd>Backspace</kbd> — cancel pending move or clear selection.</li>
+      </ul>
+	  
+	  <figure>
+        <img src="images/09-standard-move.jpg" alt="Standard move" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Standard move. <code>09-standard-move.jpg</code></figcaption>
+      </figure>
+	  
+	  <ul>
+        <li><span class="pill">Wizard move</span> — wait for the wizard slide and magic animation to finish before your next input.</li>
+      </ul>
+
+      <figure>
+        <img src="images/08-wizard-capture.jpg" alt="Wizard presentation capture effect — smoke and hit light" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Optional: Wizard capture effect — smoke → hit light → twinkle sound. <code>08-wizard-capture.jpg</code></figcaption>
+      </figure>
+
+      <h3>Status display</h3>
+      <p>The <strong>Tab quick board</strong> shows three lines of information — Game Mode, Selection, Position:</p>
+      <pre class="status">Puzzles 1/39 - Easy
+Selected: Queen
+Position: D3 (Move to H7?)</pre>
+      <figure>
+        <img src="images/20-tab-status-compact.png" alt="Tab quick board three-line status with puzzle batch index" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Tab board compact status — <code>20-tab-status-compact.png</code> (Shift+F3 while Tab overlay is open)</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Status prefix</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Chess</strong></td><td>Normal game vs Leorik (or Practice)</td></tr>
+            <tr><td><strong>Puzzles</strong></td><td>Active puzzle — shows puzzle number and total in batch on Tab board</td></tr>
+            <tr><td><strong>Custom</strong></td><td>Your own layout — includes the unique <strong>Piece vs Piece</strong> practice drill</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2D BOARDS -->
+    <section id="2d-boards">
+      <h2>2D boards</h2>
+      <p>
+        There are <strong>four 2D boards</strong> in the game, all mirroring the live 3D state in real time.
+        Two are <strong>display-only</strong> — they show every dot, ring, and badge but cannot be clicked or dragged.
+        Two are <strong>interactive</strong> — the Tab quick board lets you cycle Predict modes with <kbd>H</kbd>,
+        and the Chess-Stele back board lets you drag pieces to make moves.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Board</th><th>Location</th><th>Interactive?</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Main display board</strong></td><td>Above the outdoor 3D grid at South Parthenon</td><td>Display-only</td></tr>
+            <tr><td><strong>Chess-Stele front</strong></td><td>Front face of the Chess-Stele</td><td>Display-only</td></tr>
+            <tr><td><strong>Chess-Stele back</strong></td><td>Back face of the Chess-Stele</td><td>Interactive — <strong>Immediate</strong> mode (RMB drag) and <strong>Parthenon</strong> mode (RMB select → RMB destination → LMB commit). Toggle with the Mode button.</td></tr>
+            <tr><td><strong>Tab quick board</strong></td><td>Full-screen overlay — outdoor grid <em>or</em> back stele trigger</td><td>Interactive — <kbd>H</kbd> cycles Predict modes. Also opens from the back stele trigger.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Main display board</h3>
+      <p>
+        A large 2D board mounted <strong>above the outdoor 3D chess grid</strong> at South Parthenon.
+        It is <strong>display-only</strong> — you cannot click or drag anything on it.
+        It mirrors the live board state: green legal-move dots, orange pending ring, tactical overlays, and corner badges all update instantly as you play.
+      </p>
+
+      <h3>Tab quick board</h3>
+      <p>
+        Press <kbd>Tab</kbd> to open the <strong>Tab quick board</strong> in two locations:
+      </p>
+      <ul>
+        <li>While standing on the outdoor grid <strong>A1–H8</strong> — replaces the weapon Quick Menu.</li>
+        <li>While standing in the <strong>back stele trigger</strong> — open it alongside the back mini board to verify both 2D boards show identical live state and overlays.</li>
+      </ul>
+      <p>
+        The overlay does not pause the game or capture movement input.
+        It auto-closes when you leave both the outdoor grid <em>and</em> the back stele trigger.
+      </p>
+      <p>
+        <strong>Interactive control — <kbd>H</kbd>:</strong> while the panel is open, press <kbd>H</kbd> to cycle
+        Predict intensity: <strong>Off</strong> → <strong>On</strong> → <strong>Hint</strong> (puzzle greens + red X) → <strong>On + Hint</strong> (global Hint).
+        Each step briefly flashes <code>Predict: …</code> on screen and refreshes 3D + all 2D boards.
+        This is the only keyboard shortcut active while the Tab board is open.
+      </p>
+      <figure>
+        <img src="images/16-quick2d-chess-tab-board.png" alt="Tab quick board overlay with tactical hints and blue player marker" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Tab quick board — full board, compact 3-line status, and move log. Press <kbd>H</kbd> to cycle Predict modes.</figcaption>
+      </figure>
+      <ul>
+        <li><strong style="color:var(--green)">Green</strong> dots — legal moves to empty squares (always shown). <strong style="color:var(--green)">Green diamonds</strong> — legal capture moves (enemy piece on that square).</li>
+        <li><strong style="color:var(--blue)">Blue</strong> circle — the square where you are currently standing.</li>
+        <li>Tactical overlays (<img class="gi" src="images/chess_hint_collision.png" alt="💥">/<img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> badges, yellow/red warnings, purple previews, scout/inspect diamonds) appear when <strong>Predict: On</strong> or Hint is active.</li>
+        <li>Move log stays in sync with the 3D game. Outside the chess grid, <kbd>Tab</kbd> opens the normal weapon Quick Menu.</li>
+      </ul>
+
+      <h3>Chess-Stele — front mini board</h3>
+      <p>
+        A compact 2D board on the <strong>front face</strong> of the Chess-Stele, displayed alongside the settings panel.
+        It is <strong>display-only</strong> — it shows the same live dots and rings as every other board but has no drag or click interaction.
+        Use it to glance at the board state while adjusting Level, Predict, or Style settings without opening the Tab board.
+      </p>
+
+      <h3>Chess-Stele — back mini board</h3>
+      <p>
+        A compact 2D board on the <strong>back face</strong> of the Chess-Stele.
+        This is the most interactive 2D board in the game:
+      </p>
+      <ul>
+        <li><strong>Custom edit</strong> — in Custom mode, <kbd>RMB</kbd> drag pieces from the palette onto the board to build any position. See <a href="#custom">Custom positions</a>.</li>
+        <li><strong>Live play (Immediate mode)</strong> — <kbd>RMB</kbd> drag any White piece to a legal square to commit a move in one motion. Pawn promotion works automatically on rank 8.</li>
+        <li><strong>Live play (Parthenon mode)</strong> — a multi-step remote control that mirrors 3D selection exactly. See <a href="#back-parthenon">Parthenon mode</a> below.</li>
+        <li><strong>Custom Edit only restriction</strong> — while building a board layout, pawns cannot be placed on rank 1 or rank 8. This restriction does <em>not</em> apply during live play.</li>
+      </ul>
+
+      <h4 id="back-parthenon">Back mini board — Parthenon mode</h4>
+      <p>
+        Toggle between <strong>Immediate</strong> and <strong>Parthenon</strong> modes with the <strong>Mode</strong> button on the back panel.
+        In Parthenon mode the back board acts as a <strong>remote control</strong> for the 3D chess game —
+        all visuals, status text, and overlay animations are <em>identical</em> to what you would see
+        standing on the 3D board itself. The Tab quick board (press <kbd>Tab</kbd> from the back stele trigger) will show the same state.
+      </p>
+      <ol>
+        <li><kbd>RMB</kbd> a white piece with legal moves → the piece <em>and its square</em> turn <strong style="color:var(--blue)">blue</strong> (matching the Tab quick board), green dots and diamonds mark legal squares, status shows <strong>Selected: [piece]</strong>.</li>
+        <li>Move the cursor to the desired destination — a hover cursor highlight follows.</li>
+        <li><kbd>RMB</kbd> on a legal square → <strong style="color:var(--orange)">orange circle</strong> marks the pending destination; status shows <strong>Move to X?</strong></li>
+        <li><kbd>LMB</kbd> — commit the move.</li>
+        <li><kbd>Backspace</kbd> at any step — reverts one step (pending → selected → cancelled).</li>
+        <li>Look away from the board — cancels the entire selection.</li>
+      </ol>
+      <p>
+        All tactical overlays (green pathways, purple predict, caution tints, scout/inspect diamonds) pulse and animate
+        on both the back board and the Tab quick board while a piece is selected —
+        the same animations you see standing on the outdoor 3D square.
+        The <strong>blue player indicator</strong> (GameCage icon) sits on the selected piece's square,
+        matching the Tab board's standing-square indicator.
+      </p>
+
+      <h3>Colored markers — quick reference</h3>
+      <p>
+        All 2D boards share the same visual language. Basic markers show with any Predict setting.
+        Training markers require <strong>Predict: On</strong> or higher and are intended for beginners learning tactics.
+      </p>
+
+      <h4>Basic markers — always visible</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Marker</th><th>Visual</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Green dot</td><td><img class="gi" src="images/greenChessDot.png" alt="●"></td><td>Legal empty move &mdash; safe movement, <strong>not</strong> on an attack ray</td></tr>
+            <tr><td>Green diamond (small) <img class="gi gi--green" src="images/chessDiamond.png" alt="◆"></td><td><img class="gi gi--green" src="images/chessDiamond.png" alt="◆"></td><td><strong>Sliding piece only</strong> &mdash; empty square on an <strong>attack ray</strong> heading toward a capture</td></tr>
+            <tr><td>Green diamond (large) <img class="gi gi--green" src="images/chessDiamondLarge.png" alt="◆"></td><td><img class="gi gi--green" src="images/chessDiamondLarge.png" alt="◆"></td><td>Legal move that <strong>captures</strong> an enemy piece (actual capture square)</td></tr>
+            <tr><td>Orange circle</td><td><img class="gi gi--orange" src="images/chessCircle.png" alt="○"></td><td>Your pending destination (right-clicked but not yet confirmed)</td></tr>
+            <tr><td>Blue circle</td><td><img class="gi gi--blue" src="images/chessCircle.png" alt="○"></td><td>Tab board only — the square you are standing on</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--tip">
+        <strong>Dots vs diamonds at a glance</strong>
+        A <strong>dot</strong> means the square is safe to move to — nothing is threatened in that direction.
+        A <strong>small diamond</strong> means the square lies on a sliding-piece attack ray (Queen/Rook/Bishop) ending at a capture.
+        A <strong>large diamond</strong> marks the actual capture target. Knights, pawns, and kings use dots for empty moves and large diamonds for captures.
+      </div>
+      <h4>Training markers — Predict: On or Hint</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Marker</th><th>Visual</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Purple dot</td><td><img class="gi" src="images/purpleChessDot.png" alt="●"></td><td>"What if?" preview — where a piece could go <em>after</em> your next move</td></tr>
+            <tr><td>Red piece tint + <img class="gi" src="images/chess_hint_collision.png" alt="💥"></td><td><img class="gi" src="images/chess_hint_collision.png" alt="💥"></td><td>Black piece that can capture your selected white piece <em>right now</em></td></tr>
+            <tr><td>Yellow piece tint + <img class="gi" src="images/chess_hint_warning.png" alt="⚠️"></td><td><img class="gi" src="images/chess_hint_warning.png" alt="⚠️"></td><td>Black piece that could recapture if you move to your orange target</td></tr>
+            <tr><td>Blue tint on white pieces</td><td><img class="gi gi--blue" src="images/chessCircle.png" alt="○"></td><td>Other white pieces that <em>already attack</em> your orange destination — your backup</td></tr>
+            <tr><td>Blue square + blue piece tint</td><td><img class="gi gi--blue" src="images/chessCircle.png" alt="◯"></td><td><strong>Parthenon mode</strong> — when you RMB-select a white piece on the back Chess-Stele, the square and piece turn blue, matching the Tab quick board</td></tr>
+            <tr><td>Red dot (small)</td><td><img class="gi" src="images/greenChessDot.png" alt="●" style="filter:hue-rotate(320deg)"></td><td>Enemy scout — <strong>safe empty</strong> square a black piece could reach (no attack ray)</td></tr>
+            <tr><td>Red diamond (small) <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"></td><td><img class="gi gi--red" src="images/chessDiamond.png" alt="◆"></td><td>Enemy scout — <strong>attack-pathway</strong> square (sliding piece's ray aimed at a white piece)</td></tr>
+            <tr><td>Red diamond (large) <img class="gi gi--red" src="images/chessDiamondLarge.png" alt="◆"></td><td><img class="gi gi--red" src="images/chessDiamondLarge.png" alt="◆"></td><td>Enemy scout — <strong>white piece</strong> that black could capture; large diamond above the piece on 2D</td></tr>
+            <tr><td>Blue dot (small)</td><td><img class="gi" src="images/greenChessDot.png" alt="●" style="filter:hue-rotate(200deg)"></td><td>Friendly inspect — <strong>safe empty</strong> square another white piece could reach (no attack ray)</td></tr>
+            <tr><td>Blue diamond (small) <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"></td><td><img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"></td><td>Friendly inspect — <strong>attack-pathway</strong> square (sliding piece's ray aimed at a black piece)</td></tr>
+            <tr><td>Blue diamond (large) <img class="gi gi--blue" src="images/chessDiamondLarge.png" alt="◆"></td><td><img class="gi gi--blue" src="images/chessDiamondLarge.png" alt="◆"></td><td>Friendly inspect — <strong>black piece</strong> that white could capture; large diamond above the piece on 2D</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Puzzle coach markers — Predict: Hint + active puzzle only</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Marker</th><th>Visual</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Green circle (large)</td><td><img class="gi gi--green" src="images/chessCircle.png" alt="○"></td><td>The square where checkmate happens — solution hint</td></tr>
+            <tr><td>Red X</td><td><img class="gi" src="images/puzzleHintX.png" alt="✕"></td><td>Wrong square while you are aiming — <strong>never</strong> shown outside an active puzzle</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure>
+        <img src="images/22-2d-overlay-glyphs.png" alt="Close-up of colored dots, circles, and corner badges on a 2D board" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>2D overlay close-up — dots, rings, and corner badges. <code>22-2d-overlay-glyphs.png</code></figcaption>
+      </figure>
+      <figure>
+        <img src="images/11-tactical-caution.jpg" alt="Yellow caution tint and warning badge on a 2D board" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Optional: caution hints on 2D — yellow defender tint + <img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> badge. <code>11-tactical-caution.jpg</code></figcaption>
+      </figure>
+    </section>
+
+    <!-- TACTICAL OVERLAYS -->
+    <section id="tactical">
+      <h2>Overlays &amp; colors</h2>
+
+      <div class="callout callout--warn">
+        <strong>Predict vs Hint — read this first</strong>
+        <ul>
+          <li><strong>Predict: Off</strong> — clean board: green legal moves + blue standing square only. Good for experienced players.</li>
+          <li><strong>Predict: On</strong> — tactical training in <em>every mode</em>: purple "what if" previews, scout/inspect holds, <img class="gi" src="images/chess_hint_collision.png" alt="💥">/<img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> caution badges, warning tints. Recommended while learning.</li>
+          <li><strong>Predict: Hint</strong> — same as On, plus <em>puzzle-only</em> extras: large green circle on the mate square and red X on wrong squares. No effect outside an active puzzle.</li>
+        </ul>
+      </div>
+
+      <p>
+        <strong>Predict: On</strong> adds tactical overlays on both the <strong>3D board</strong> and every <strong>2D board</strong>
+        (Chess-Stele mini boards and Tab quick board) in all chess modes.
+        With <strong>Predict: Off</strong> you still get <strong style="color:var(--green)">green</strong> legal-move markers
+        and the <strong style="color:var(--blue)">blue</strong> standing square — just no warnings, purple dots, or scout/inspect holds.
+        <strong>Wizard</strong> style still animates slides; with Predict Off it shows green/blue/orange glowing markers on the outdoor board.
+        Beginner runic piece auras and inspect holds require <strong>Predict: On</strong> or higher.
+      </p>
+
+      <h3>Green + purple overlap</h3>
+      <p>
+        On 2D boards, when a square has both a <strong style="color:var(--green)">green dot or green diamond</strong> (legal move now) and a
+        <strong style="color:#9b59ff">purple dot</strong> (hypothetical next move), they <strong>alternate</strong> —
+        green fades out as purple fades in, using the same rhythm as <strong style="color:var(--orange)">orange</strong> rings and tinted pieces.
+        Purple dots are the same size as green dots and green capture diamonds.
+        <strong style="color:var(--red)">Red</strong> and <strong style="color:var(--blue)">blue diamonds</strong> on the same square alternate with purple the same way.
+        Threatened white pieces under a large red scout diamond and threatened black pieces under a large blue inspect diamond <strong>ghost-pulse</strong> with that rhythm — the piece fades out when the diamond is at full brightness.
+      </p>
+
+      <h3>Color guide — what each color means</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Color / marker</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td><strong style="color:var(--green)">Green dot</strong></td><td>A square your selected piece can legally move to (empty square).</td></tr>
+            <tr><td><strong style="color:var(--green)">Green diamond</strong> <img class="gi gi--green" src="images/chessDiamond.png" alt="◆"></td><td>A square your selected piece can <strong>capture</strong> on — the square shows a green diamond and the enemy piece turns green.</td></tr>
+            <tr><td><strong style="color:var(--blue)">Blue</strong> circle (large)</td><td>The white piece you are currently standing on — your active selection.</td></tr>
+            <tr><td><strong style="color:var(--orange)">Orange</strong></td><td>The square you are about to move to (pending destination or live aim preview).</td></tr>
+            <tr><td><strong style="color:var(--red)">Red</strong> tint + <img class="gi" src="images/chess_hint_collision.png" alt="💥"></td><td>A black piece that can capture <strong>your selected white piece right now</strong> (needs Predict: On + Piece Labels).</td></tr>
+            <tr><td><strong style="color:var(--yellow)">Yellow</strong> tint + <img class="gi" src="images/chess_hint_warning.png" alt="⚠️"></td><td>A black piece that could recapture if you move to your orange target (same rules).</td></tr>
+            <tr><td><strong style="color:var(--blue)">Blue tint</strong> on white pieces</td><td>Other white pieces that already attack your orange destination — your backup cover.</td></tr>
+            <tr><td><strong style="color:#9b59ff">Purple</strong> dot</td><td>"What if?" — where a piece could go <em>after</em> your next move (prediction).</td></tr>
+            <tr><td><strong style="color:var(--red)">Red diamond</strong> <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"></td><td>Enemy scout result — empty move squares (small) or capturable white pieces (large) for a black piece.</td></tr>
+            <tr><td><strong style="color:var(--blue)">Blue diamond</strong> <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"></td><td>Friendly inspect result — empty move squares (small) or capturable black pieces (large) for another white piece.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        When an <strong style="color:var(--orange)">orange</strong> destination is set,
+        <strong style="color:var(--yellow)">yellow</strong> / <img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> marks black pieces defending that square and
+        <strong style="color:var(--blue)">blue tints</strong> mark white pieces already attacking it — your backup.
+        The piece you are moving is not tinted blue.
+      </p>
+
+      <h3>Study an enemy piece (hold crosshair ~1 second)</h3>
+      <p>
+        Aim the crosshair at a <strong>black piece</strong> and hold for about one second.
+        <strong>Standard:</strong> small red <strong>dots</strong> appear on safe empty squares; small red <strong>diamonds</strong> appear on empty squares that are on an <strong>attack ray</strong> heading toward a white piece; <strong>large</strong> red diamonds appear on the white pieces it could capture (pieces stay white — no red tint). Threatened whites may show <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"> on 3D name tags when <strong>Piece Labels</strong> are on.
+        <strong>Wizard + Predict: On:</strong> red glowing auras appear on the hovered piece and those squares.
+        <strong>Wizard + Predict Off:</strong> red diamonds on 2D only (scout holds are disabled on 3D).
+        Look away to clear the hint. Setting a pending move with <kbd>RMB</kbd> also clears it.
+        Requires <strong>Predict: On</strong> or higher.
+      </p>
+      <figure>
+        <img src="images/12-black-scout-hold.jpg" alt="Red scout diamonds after holding crosshair on a black piece" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Optional: enemy scout hold — <code>12-black-scout-hold.jpg</code> (~1 s hold; small <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"> on empty squares, large <img class="gi gi--red" src="images/chessDiamondLarge.png" alt="◆"> above threatened white pieces)</figcaption>
+      </figure>
+
+      <h3>Study another friendly piece (hold crosshair ~1 second)</h3>
+      <p>
+        Aim at a different <strong>white piece</strong> (not the one you are standing on) and hold for about one second.
+        <strong>Standard:</strong> small blue <strong>dots</strong> appear on safe empty squares; small blue <strong>diamonds</strong> appear on empty squares that are on an <strong>attack ray</strong> heading toward a black piece; <strong>large</strong> blue diamonds appear on the black pieces it could capture (pieces stay black — no blue tint). White-base diamond art is tinted blue in-engine. Threatened blacks may show <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"> on 3D name tags when <strong>Piece Labels</strong> are on.
+        <strong>Wizard + Predict: On:</strong> blue glowing auras on the hovered white piece and those squares.
+        <strong>Wizard + Predict Off:</strong> blue diamonds on 2D only (inspect holds disabled on 3D).
+        Your standing piece keeps its own green move dots.
+        Requires <strong>Predict: On</strong> or higher.
+      </p>
+      <figure>
+        <img src="images/17-white-inspect-hold.jpg" alt="Blue diamonds after holding crosshair on another white piece" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Optional: friendly inspect hold — <code>17-white-inspect-hold.jpg</code> (~1 s hold; small <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"> on empty squares, large <img class="gi gi--blue" src="images/chessDiamondLarge.png" alt="◆"> above threatened black pieces)</figcaption>
+      </figure>
+    </section>
+
+    <!-- FRONT STELE -->
+    <section id="front">
+      <h2>Chess-Stele — front panel</h2>
+      <p>Stand in the <strong>front trigger</strong> and aim the crosshair at the controls.</p>
+
+      <figure>
+        <img src="images/02-ministele-front.jpg" alt="Chess-Stele front panel with all controls visible" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>
+          <strong>Figure 2.</strong> Front panel — add as <code>images/02-ministele-front.jpg</code>
+        </figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Input</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Mouse wheel on a control</td><td>Change that setting</td></tr>
+            <tr><td>Left-click</td><td>Select Level / Puzzles / Custom, press green <strong>START</strong>, or red <strong>Clear</strong></td></tr>
+            <tr><td>Shift + click Puzzles</td><td>Clear all solved ★ marks</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Buttons</h3>
+      <ul>
+        <li><strong>Level</strong> <span class="pill">mode</span> — wheel cycles <strong>0 Practice</strong> → <strong>4 Hard</strong>. Glows cyan when selected.</li>
+        <li><strong>Piece Labels</strong> — 3D floating name tags: Name / Name &amp; Position / Position / None. Setting to <strong>None</strong> hides <img class="gi" src="images/chess_hint_collision.png" alt="💥">/<img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> caution hints on 3D name tags (2D corner badges also hide); green capture tints still follow Predict. The label on the piece you are <strong>standing on</strong> is always hidden while you occupy that square — it would obstruct the view.</li>
+        <li><strong>Style</strong> — <strong>Standard</strong> (instant moves, flat circles) ↔ <strong>Wizard</strong> (animated moves + glowing orbs/auras). See <a href="#board">On the 3D board</a> for a visual comparison. Independent of Predict.</li>
+        <li><strong>Predict</strong> — <strong>Off / On / Hint</strong>. Wheel cycles Off → On → Hint. See the table below.</li>
+        <li><strong>Puzzles</strong> <span class="pill">mode</span> — wheel changes puzzle set: win in 1 / 2 / 3 moves.</li>
+        <li><strong>Custom</strong> <span class="pill">mode</span> — build your own board on the back panel; includes the unique <strong>Piece vs Piece</strong> drill.</li>
+        <li><strong>START</strong> / <strong>Play</strong> / <strong>Playing</strong> — green button starts the selected mode. Shows <strong>Play</strong> in Custom edit, <strong>START</strong> for Level/Puzzles, and <strong>Playing</strong> while that session is active.</li>
+        <li><strong>Clear</strong> (red) — resets the active mode only. Label changes by context: <strong>Clear game</strong> (Level), <strong>Clear puzzle</strong> or <strong>Clear board</strong> (Puzzles), <strong>Clear board</strong> / <strong>Restart</strong> (Custom). Green button returns to START or Play after clearing.</li>
+      </ul>
+
+      <h3>Predict — who should use which setting?</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Setting</th><th>Best for</th><th>What you see</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Off</strong></td>
+              <td>Experienced players</td>
+              <td><strong style="color:var(--green)">Green dots</strong> (empty legal squares) + <strong style="color:var(--green)">green diamonds</strong> (capture squares) + <strong style="color:var(--blue)">blue</strong> standing circle. No warnings, purple, scout/inspect holds, label badges, puzzle greens, or red X. <strong>Wizard:</strong> glowing green/blue/orange orbs on 3D (capture squares use the same orb; piece turns green to mark captures).</td>
+            </tr>
+            <tr>
+              <td><strong>On</strong></td>
+              <td>Learning chess</td>
+              <td>Everything in Off, plus tactical overlays in <strong>every mode</strong>: red/yellow warnings with badges, purple "what if" dots, enemy/friendly study on hold, capture highlights. <strong>No</strong> puzzle solution circle or red X.</td>
+            </tr>
+            <tr>
+              <td><strong>Hint</strong></td>
+              <td>Solving Puzzles</td>
+              <td>Same as On, plus <strong>puzzle-only</strong> coach: large green circle on the mate square and red X on wrong squares while aiming. <strong>No extra effect outside an active puzzle.</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>START, Play, and Clear workflow</h3>
+      <ol>
+        <li>Select a mode (<strong>Level</strong>, <strong>Puzzles</strong>, or <strong>Custom</strong>).</li>
+        <li>Click the green button — <strong>START</strong> (Level/Puzzles) or <strong>Play</strong> (Custom). Button shows <strong>Playing</strong> while active.</li>
+        <li>Click red <strong>Clear</strong> to reset that mode only; green button returns so you can start again.</li>
+        <li>Custom only: <kbd>Shift</kbd> + <strong>Clear</strong> while editing loads the standard starting position.</li>
+        <li>Other modes keep their own saved games — clearing Level does not erase your Custom layout.</li>
+      </ol>
+    </section>
+
+    <!-- LEORIK SLIDERS -->
+    <section id="leorik">
+      <h2>Leorik tuning (advanced — Easy+ only)</h2>
+      <p>
+        <strong>You can skip this section until Level 1 (Easy) or higher.</strong>
+        Practice (Level 0) hides these sliders entirely.
+        They adjust the computer opponent (Leorik) — not your hints or overlays.
+      </p>
+      <p>Aim at a slider on the Chess-Stele front and scroll the <strong>mouse wheel</strong>.</p>
+
+      <h3>Temperature (0 – 990)</h3>
+      <p><strong>Higher = weaker and more random opponent.</strong> Lower = stronger and more focused. Wheel step: 10.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Level</th><th>Default</th><th>~Slider position</th></tr></thead>
+          <tbody>
+            <tr><td>1 Easy</td><td>700</td><td>~71%</td></tr>
+            <tr><td>2 Beginner</td><td>300</td><td>~30%</td></tr>
+            <tr><td>3 Normal</td><td>100</td><td>~10%</td></tr>
+            <tr><td>4 Hard</td><td>0</td><td>Far left</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Movetime (100 – 1000 ms)</h3>
+      <p>How long the computer thinks before each Black move. Wheel step: 50 ms.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Level</th><th>Default</th></tr></thead>
+          <tbody>
+            <tr><td>1 Easy</td><td>100 ms</td></tr>
+            <tr><td>2 Beginner</td><td>300 ms</td></tr>
+            <tr><td>3 Normal</td><td>500 ms</td></tr>
+            <tr><td>4 Hard</td><td>1000 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><em>Puzzles always use 100 ms for Black's forced replies regardless of the Movetime slider.</em></p>
+
+      <h3>Threads (1 – 16)</h3>
+      <p>How much CPU the chess engine uses. Default <strong>4</strong>. Only change this if you know you need to. Wheel step: 1.</p>
+    </section>
+
+    <!-- BACK STELE -->
+    <section id="back">
+      <h2>Chess-Stele — back panel</h2>
+      <p>Stand in the <strong>rear trigger</strong>. The back panel content changes depending on which mode is active on the front.</p>
+
+      <div class="fig-grid fig-grid--3">
+        <figure>
+          <img src="images/03-ministele-back-history.jpg" alt="Back panel History mode" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>History</strong> — <code>03-ministele-back-history.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/04-ministele-back-puzzles.jpg" alt="Back panel Puzzles list" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Puzzles</strong> — <code>04-ministele-back-puzzles.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/05-ministele-back-custom.jpg" alt="Back panel Custom edit UI" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Custom</strong> — <code>05-ministele-back-custom.jpg</code></figcaption>
+        </figure>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Front mode</th><th>Back header</th><th>Content</th></tr></thead>
+          <tbody>
+            <tr><td>Level / playing</td><td>History</td><td>Numbered move log + mini 2D board</td></tr>
+            <tr><td>Puzzles</td><td>Puzzles</td><td>Scrollable puzzle catalog (~10 rows visible)</td></tr>
+            <tr><td>Custom</td><td>Custom (N)</td><td>FEN field, white/black palettes, edit controls</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul>
+        <li><strong>Mouse wheel</strong> — scroll the list.</li>
+        <li><strong>Left-click a row</strong> — jump to that puzzle or history position (History rows play a click sound).</li>
+        <li><strong>Aim at a row</strong> — highlights in <strong style="color:#99D9FF">light blue</strong> under the crosshair.</li>
+        <li><strong style="color:var(--green)">Green row</strong> — puzzle solved. <strong style="color:var(--orange)">Orange row</strong> — current selection.</li>
+        <li><strong>History controls:</strong> Shift + wheel scrolls the log; LMB selects a line; RMB redos to that position (Leorik replies if it's Black's turn); Backspace / Ctrl+Z / MMB undoes the last full turn.</li>
+      </ul>
+
+      <h3 id="history-log">Move log (History)</h3>
+      <p>
+        The History panel lists moves in standard chess notation (short codes like <code>e4</code>).
+        On <strong>Practice</strong>, <strong>Easy</strong>, and <strong>Beginner</strong>, each line also shows plain English in brackets — for example: <code>e4 (E2 to E4 White Pawn)</code>.
+        History rows highlight in light blue when you aim at them; left-click plays a click sound.
+      </p>
+    </section>
+
+    <!-- PUZZLES -->
+    <section id="puzzles">
+      <h2>Puzzles</h2>
+      <figure>
+        <img src="images/09-puzzle-solved.jpg" alt="Puzzle solved status or advance on Black King" loading="lazy" onerror="this.classList.add('missing')">
+        <figcaption>Optional: puzzle solved / advance — <code>09-puzzle-solved.jpg</code></figcaption>
+      </figure>
+
+      <h3>Puzzle list labels</h3>
+      <p>Example row: <code>1 Move #3  kingsideAttack • 1546</code> — puzzle number, moves to mate, tag, and position number.</p>
+
+      <h3>How to start a puzzle</h3>
+      <ol>
+        <li>On the front: select <strong>Puzzles</strong>, then pick a row on the back and press green <strong>START</strong>.</li>
+        <li>The HUD flashes <strong>Chess Puzzle #n</strong>; the Chess-Stele shows e.g. <strong>Puzzles 1 - Easy</strong>.</li>
+        <li>Find the move that puts the black king in <strong>checkmate</strong> (no escape).</li>
+        <li>On success: <strong>PUZZLE n SOLVED!</strong> — stand on the <strong>Black King</strong> to load the next puzzle.</li>
+      </ol>
+      <div class="callout callout--tip">
+        <strong>Puzzle source</strong>
+        Puzzles are drawn from the open-source
+        <a href="https://database.lichess.org/" target="_blank" rel="noopener noreferrer">Lichess puzzle database</a>,
+        created and maintained by the <a href="https://lichess.org/" target="_blank" rel="noopener noreferrer">Lichess.org</a>
+        community under a <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0 public domain dedication</a>.
+        Positions come from real games played on Lichess.
+      </div>
+
+      <h3 id="puzzles-hints">Puzzle coach (Predict: Hint)</h3>
+      <p>
+        Set the Chess-Stele front to <strong>Predict: Hint</strong> before pressing <strong>START</strong> (or press <kbd>H</kbd> on the Tab board).
+        Coach overlays appear <strong>only</strong> while a puzzle is active — they never appear in Level, Practice, or Custom.
+      </p>
+      <ul>
+        <li><strong style="color:var(--green)">Green circle</strong> <img class="gi gi--green" src="images/chessCircle.png" alt="○"> — the square that delivers checkmate.</li>
+        <li>Red <strong>X</strong> <img class="gi" src="images/puzzleHintX.png" alt="✕"> — you are aiming at a wrong square. Shown on 3D and all 2D boards.</li>
+      </ul>
+      <p>
+        Outside an active puzzle, <strong>Predict: Hint</strong> behaves exactly like <strong>Predict: On</strong> — you get all tactical training overlays, but the green solution circle and red X never appear.
+      </p>
+    </section>
+
+    <!-- CUSTOM -->
+    <section id="custom">
+      <h2>Custom positions</h2>
+      <ol>
+        <li>Front: select <strong>Custom</strong> — the back board clears for editing.</li>
+        <li>Back: <kbd>RMB</kbd> drag pieces from the white/black <strong>palettes</strong> onto the mini board.</li>
+        <li><strong>Clear Board</strong> empties the layout. <strong>Set Game</strong> loads the standard starting position (where available).</li>
+        <li>Front: press <strong>Play</strong> when the layout is valid — triggers <strong>Piece vs Piece Practice</strong> (2 mirrored pieces) or a normal Custom game (3+ pieces with both kings).</li>
+        <li><kbd>Ctrl+V</kbd> paste — advanced: load a saved board code (Custom edit only; multiple pasted lines build a playlist).</li>
+      </ol>
+
+      <div class="callout callout--tip">
+        <strong>Custom mode — unique South Parthenon "Piece vs Piece" Practice</strong>
+        For beginners only. This drill exists <em>nowhere else in the game</em>. Place <strong>one White + one Black</strong> of the <strong>same piece type</strong> (P/R/N/B/Q/K), press <strong>Play</strong>, and practice how that piece moves for up to <strong>50 moves</strong>. A 7-second center banner confirms practice mode (e.g. <em>King Practice 50 Moves</em>). FIDE rules apply including pawn promotion on the 3D board. Leorik replies when available. Ends on capture, mate/stalemate, or the 50-move draw. You cannot add a third piece without clearing the board first.
+      </div>
+
+      <h3>Piece vs Piece — example setups</h3>
+      <p>Three common beginner drills. Drop your screenshots into <code>images/</code> (see <code>images/IMAGES.md</code>).</p>
+      <div class="fig-grid fig-grid--3">
+        <figure>
+          <img src="images/13-piece-practice-king-vs-king.jpg" alt="Custom Piece vs Piece Practice — white king vs black king with practice banner" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>King vs King</strong> — <code>13-piece-practice-king-vs-king.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/14-piece-practice-pawn-vs-pawn.jpg" alt="Custom Piece vs Piece Practice — white pawn vs black pawn" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Pawn vs Pawn</strong> — <code>14-piece-practice-pawn-vs-pawn.jpg</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/15-piece-practice-knight-vs-knight.jpg" alt="Custom Piece vs Piece Practice — white knight vs black knight" loading="lazy" onerror="this.classList.add('missing')">
+          <figcaption><strong>Knight vs Knight</strong> — <code>15-piece-practice-knight-vs-knight.jpg</code></figcaption>
+        </figure>
+      </div>
+
+      <p>
+        During live play, the back mini board accepts <kbd>RMB</kbd> drag of <strong>White</strong> pieces to legal squares.
+        When a pawn reaches rank 8, the <strong>promotion panel</strong> opens automatically — use <kbd>W/A/S/D</kbd> to choose Queen, Rook, Knight, or Bishop, then <kbd>RMB</kbd> or <kbd>Space</kbd> to confirm.
+        The 3D board is always the primary input; the back mini board mirrors every move in real time.
+      </p>
+      <p>
+        <strong>Custom Edit only restriction:</strong> while building a layout, pawns cannot be placed on rank 1 or rank 8.
+        This does <em>not</em> apply during live play — pawn promotion works normally.
+      </p>
+
+      <div class="callout callout--tip">
+        <strong>Back mini board — Immediate mode drag preview</strong>
+        In Immediate mode, hold <kbd>LMB</kbd> while dragging a white piece to see a temporary tactical preview — green legal squares, yellow/red caution tints (yellow defenders, red immediate attackers). Release <kbd>LMB</kbd> to hide. The green squares are always shown; yellow/red caution tints require <strong>Predict: On</strong> or Hint.
+      </div>
+      <div class="callout callout--tip">
+        <strong>Back mini board — Parthenon mode tip</strong>
+        Press <kbd>Tab</kbd> while standing in the back stele trigger to open the Tab quick board alongside the back mini board.
+        Both 2D boards will show <em>identical</em> overlays and status — useful for verifying everything is in sync before committing your move.
+        Backspace reverts the selection one step at a time; looking away from the board cancels completely.
+      </div>
+
+      <p><kbd>Ctrl+C</kbd> on the layout field copies the current board code. <kbd>Ctrl+V</kbd> paste loads a position in Custom edit.</p>
+    </section>
+
+    <!-- TIPS -->
+    <section id="tips">
+      <h2>Tips</h2>
+      <div class="callout callout--tip">
+        <strong>Game info balloon</strong>
+        Summarizes Chess-Stele controls when you enter a trigger. <kbd>Caps Lock</kbd> can collapse it during play.
+      </div>
+      <ul>
+        <li><strong>Predict: Off</strong> = clean pro view (green + blue only). On the Tab board: press <kbd>H</kbd> to cycle <strong>Predict: Off → On → Hint → On + Hint</strong>; mode flashes briefly on screen.</li>
+        <li><strong>Predict: On</strong> = tactical badges, purple previews, scout/inspect holds in all modes. <strong>Predict: Hint</strong> = same plus puzzle green circle + red X (puzzles only).</li>
+        <li><strong>Style</strong> = move presentation (Standard instant vs Wizard animated). <strong>Predict</strong> = training overlays. <strong>Wizard + Predict Off</strong> still shows glowing green/blue/orange markers on 3D.</li>
+        <li>After red <strong>Clear</strong>, the green button returns to <strong>START</strong> or <strong>Play</strong> — it will not stay stuck on <strong>Playing</strong>.</li>
+        <li><img class="gi" src="images/chess_hint_collision.png" alt="💥">/<img class="gi" src="images/chess_hint_warning.png" alt="⚠️"> caution hints need <strong>Predict: On</strong> or Hint and <strong>Piece Labels</strong> not set to <strong>None</strong>. Yellow/red black-piece tints and blue backup white-piece tints on 2D also follow Predict On or Hint.</li>
+        <li>Settings persist between sessions: Level, puzzle set, Style, Piece Labels, Predict, Leorik sliders, solved puzzle ★ marks.</li>
+        <li>Engine status appears under Level (<em>Engine OK</em> or missing) — only relevant for Easy+ levels and Puzzles.</li>
+        <li>For general Escaper movement, weapons, and menus, see the main game guide in the repo.</li>
+      </ul>
+    </section>
+
+    <!-- APPENDIX -->
+    <section id="appendix-capture">
+      <h2>Appendix — doc screenshots (for authors)</h2>
+      <p>Hotkeys for capturing PNG/JPG assets under <code>images/</code> while playing:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Hotkey</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>Print Screen</kbd></td><td>Full main-camera JPG (3D board + HUD)</td></tr>
+            <tr><td><kbd>F3</kbd></td><td>Toggle SnapShotCam fly panel (WASD to fly; Enter saves from panel)</td></tr>
+            <tr><td><kbd>Home</kbd> <em>(SnapShotCam open)</em></td><td>Sync fly camera to spinCageEyes home position</td></tr>
+            <tr><td><kbd>Shift</kbd> + <kbd>F3</kbd></td><td>PNG crop of open UI panel (Quick2DChessBoard, Quick Menu, Help, Settings); else full-screen JPG</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Default save folder: <code>docs/chess-south-parthenon/images/</code> (or <code>Escaper/SnapShots/</code> if missing).
+        See <code>images/IMAGES.md</code> for the full filename checklist — priority new shots:
+        <code>20-tab-status-compact.png</code>, <code>21-stele-status-pending.jpg</code>, <code>22-2d-overlay-glyphs.png</code>.
+      </p>
+    </section>
+
+    <footer>
+      <p><strong>The Escaper</strong> — Chess at South Parthenon player guide.</p>
+      <p>
+        Chess puzzles sourced from the
+        <a href="https://database.lichess.org/" target="_blank" rel="noopener noreferrer">Lichess puzzle database</a>
+        &mdash; open data by the <a href="https://lichess.org/" target="_blank" rel="noopener noreferrer">Lichess.org</a>
+        community (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0</a>).
+      </p>
+      <p>Place screenshots in <code>images/</code> per <code>images/IMAGES.md</code>. Deploy this folder with GitHub Pages (<code>/docs</code> on <code>main</code> → Settings → Pages → branch <strong>main</strong>, folder <strong>/docs</strong>).</p>
+    </footer>
+  </div>
+</body>
+</html>
