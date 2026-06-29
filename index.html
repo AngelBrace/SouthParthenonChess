@@ -533,7 +533,13 @@ Position: D3 (Move to H7?)</pre>
         matching the Tab board's standing-square indicator.
       </p>
 
-      <h3>Colored markers — quick reference</h3>
+    </section>
+
+    <!-- TACTICAL OVERLAYS -->
+    <section id="tactical">
+      <h2>Overlays &amp; colors</h2>
+
+      <h3 id="markers">Colored markers — quick reference</h3>
       <p>
         All 2D boards share the same visual language. Basic markers show with any Predict setting.
         Training markers require <strong>Predict: On</strong>, <strong>Hint</strong>, or <strong>On + Hint</strong> and are intended for beginners learning tactics.
@@ -552,14 +558,14 @@ Position: D3 (Move to H7?)</pre>
           </tbody>
         </table>
       </div>
-	  
-<div class="callout callout--tip">
-  <strong>Dots vs diamonds at a glance</strong>
-    <br>
-  <p><strong>Dot</strong> — The square is safe to move to — nothing is threatened in that direction.</p>
-  <p><strong>Small diamond</strong> — The square lies on a sliding-piece attack ray (Queen/Rook/Bishop) ending at a capture.</p>
-  <p><strong>Large diamond</strong> — The actual capture target. Knights, pawns, and kings use dots for empty moves and large diamonds for captures.</p>
-</div>
+
+      <div class="callout callout--tip">
+        <strong>Dots vs diamonds at a glance</strong>
+        <br>
+        <p><strong>Dot</strong> — The square is safe to move to — nothing is threatened in that direction.</p>
+        <p><strong>Small diamond</strong> — The square lies on a sliding-piece attack ray (Queen/Rook/Bishop) ending at a capture.</p>
+        <p><strong>Large diamond</strong> — The actual capture target. Knights, pawns, and kings use dots for empty moves and large diamonds for captures.</p>
+      </div>
 
       <h4>Training markers — Predict: On, Hint, or On + Hint</h4>
       <div class="table-wrap">
@@ -571,13 +577,13 @@ Position: D3 (Move to H7?)</pre>
             <tr><td>Yellow piece tint + ⚠️ </td><td>⚠️</td><td>Black piece that could recapture if you move to your orange target</td></tr>
             <tr><td>Blue tint on white pieces</td><td><img class="gi" src="images/blueChessCircle.png" alt="○"></td><td>Other white pieces that <em>already attack</em> your orange destination — your backup</td></tr>
             <tr><td>Blue square + blue piece tint</td><td><img class="gi" src="images/blueChessSquareLarge.png" alt="◯"></td><td><strong>Parthenon mode</strong> — when you RMB-select a white piece on the back Chess-Stele, the square and piece turn blue, matching the Tab quick board</td></tr>
-            <tr><td>Red dot (small)</td><td><img class="gi" src="images/redChessDot.png" style="width:14px;height:14px;"  alt="●"></td><td>Enemy scout — <strong>safe empty</strong> square a black piece could reach (no attack ray)</td></tr>
+            <tr><td>Red dot (small)</td><td><img class="gi" src="images/redChessDot.png" style="width:14px;height:14px;" alt="●"></td><td>Enemy scout — <strong>safe empty</strong> square a black piece could reach (no attack ray)</td></tr>
             <tr><td>Red diamond (small)</td><td><img class="gi" src="images/redChessDiamond.png" style="width:14px;height:14px;" alt="◆"></td><td>Enemy scout — <strong>attack-pathway</strong> square (sliding piece's ray aimed at a white piece)</td></tr>
             <tr><td>Red diamond (large)</td><td><img class="gi" src="images/redChessDiamondLarge.png" style="width:24px;height:24px;" alt="◆"></td><td>Enemy scout — <strong>white piece</strong> that black could capture; large diamond above the piece on 2D</td></tr>
             <tr><td>Blue dot (small)</td><td><img class="gi" src="images/blueChessDot.png" style="width:14px;height:14px;" alt="●"></td><td>Friendly inspect — <strong>safe empty</strong> square another white piece could reach (no attack ray)</td></tr>
-            <tr><td>Blue diamond (small)</td><td>  <img class="gi" src="images/blueChessDiamond.png" style="width:14px;height:14px;" alt="◆"></td><td>Friendly inspect — <strong>attack-pathway</strong> square (sliding piece's ray aimed at a black piece)</td></tr>
-            <tr><td>Blue diamond (large)</td><td>  <img class="gi" src="images/blueChessDiamondLarge.png" style="width:24px;height:24px;" alt="◆"></td><td>Friendly inspect — <strong>black piece</strong> that white could capture; large diamond above the piece on 2D</td></tr>
-            <tr><td>Inspect ring (red / blue)</td><td><img class="gi" src="images/chess2DInspectSourceSprite.png" style="width:24px;height:24px;" alt="( )"></td><td>Bracket ring on the <strong>inspected piece's own square</strong> — red tint when holding on a black piece, blue tint when holding on a white piece</td></tr>
+            <tr><td>Blue diamond (small)</td><td><img class="gi" src="images/blueChessDiamond.png" style="width:14px;height:14px;" alt="◆"></td><td>Friendly inspect — <strong>attack-pathway</strong> square (sliding piece's ray aimed at a black piece)</td></tr>
+            <tr><td>Blue diamond (large)</td><td><img class="gi" src="images/blueChessDiamondLarge.png" style="width:24px;height:24px;" alt="◆"></td><td>Friendly inspect — <strong>black piece</strong> that white could capture; large diamond above the piece on 2D</td></tr>
+            <tr><td>Inspect ring (red / blue)</td><td><img class="gi gi--red" src="images/redBracketRing.png" style="width:20px;height:20px;" alt="( )"> <img class="gi gi--blue" src="images/blueBracketRing.png" style="width:20px;height:20px;" alt="( )"></td><td>Bracket ring on the <strong>inspected piece's own square</strong> — red for a black-piece hold, blue for a white-piece hold</td></tr>
           </tbody>
         </table>
       </div>
@@ -601,11 +607,6 @@ Position: D3 (Move to H7?)</pre>
         <img src="images/11-tactical-caution.jpg" alt="Yellow caution tint and warning badge on a 2D board" loading="lazy" onerror="this.classList.add('missing')">
         <figcaption>Optional: caution hints on 2D — yellow defender tint + ⚠️ badge. <code>11-tactical-caution.jpg</code></figcaption>
       </figure>
-    </section>
-
-    <!-- TACTICAL OVERLAYS -->
-    <section id="tactical">
-      <h2>Overlays &amp; colors</h2>
 
       <div class="callout callout--warn">
         <strong>Predict modes — read this first</strong>
@@ -636,25 +637,8 @@ Position: D3 (Move to H7?)</pre>
         Threatened white pieces under a large red scout diamond and threatened black pieces under a large blue inspect diamond <strong>ghost-pulse</strong> with that rhythm — the piece fades out when the diamond is at full brightness.
       </p>
 
-      <h3>Color guide — what each color means</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Color / marker</th><th>What it means</th></tr></thead>
-          <tbody>
-            <tr><td><strong style="color:var(--green)">Green dot</strong>  <img class="gi" src="images/greenChessDot.png" style="width:14px;height:14px;" alt="●"></td><td>A square your selected piece can legally move to (empty square).</td></tr>
-            <tr><td><strong style="color:var(--green)">Green diamond</strong>  <img class="gi" src="images/greenChessDiamond.png" alt="◆"></td><td>A square your selected piece can <strong>capture</strong> on — the square shows a green diamond and the enemy piece turns green.</td></tr>
-            <tr><td><strong style="color:var(--blue)">Blue square</strong>  <img class="gi" src="images/blueChessSquareLarge.png" alt="◆"></td><td>The white piece you are currently standing on — your active selection.</td></tr>
-            <tr><td><strong style="color:var(--orange)">Orange circle</strong>  <img class="gi" src="images/orangeChessCircle.png" style="width:24px;height:24px;" alt="●"></td><td>The square you are about to move to (pending destination or live aim preview).</td></tr>
-            <tr><td><strong style="color:var(--red)">Red</strong> tint + 💥</td><td>A black piece that can capture <strong>your selected white piece right now</strong> (needs Predict: On, Hint, or On+Hint — and Piece Labels not None).</td></tr>
-            <tr><td><strong style="color:var(--yellow)">Yellow</strong> tint + ⚠️</td><td>A black piece that could recapture if you move to your orange target (same requirements).</td></tr>
-            <tr><td><strong style="color:var(--blue)">Blue tint</strong> on white pieces</td><td>Other white pieces that already attack your orange destination — your backup cover.</td></tr>
-            <tr><td><strong style="color:#9b59ff">Purple dot</strong>  <img class="gi" src="images/purpleChessDot.png" style="width:14px;height:14px;" alt="●"></td><td>"What if?" — where a piece could go <em>after</em> your next move (prediction).</td></tr>
-            <tr><td><strong style="color:var(--red)">Red diamond</strong>  <img class="gi" src="images/redChessDiamondLarge.png" alt="◆"></td><td>Enemy scout result — empty move squares (small) or capturable white pieces (large) for a black piece.</td></tr>
-            <tr><td><strong style="color:var(--blue)">Blue diamond</strong>  <img class="gi" src="images/blueChessDiamondLarge.png" alt="◆"></td><td>Friendly inspect result — empty move squares (small) or capturable black pieces (large) for another white piece.</td></tr>
-            <tr><td><strong>Inspect ring</strong>  <img class="gi" src="images/chess2DInspectSourceSprite.png" style="width:24px;height:24px;" alt="( )"></td><td>Bracket ring on the inspected piece's square — red tint for a black piece hold, blue tint for a white piece hold.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <p>For a full sprite-by-sprite glossary see <a href="#markers">Colored markers — quick reference</a> above.
+      The sections below explain <em>when</em> each overlay appears and how to read it in play.</p>
 
       <p>
         When an <strong style="color:var(--orange)">orange</strong> destination is set,
@@ -666,7 +650,7 @@ Position: D3 (Move to H7?)</pre>
       <h3>Study an enemy piece (hold crosshair ~1 second)</h3>
       <p>Aim the crosshair at a <strong>black piece</strong> and hold about one second. Requires <strong>Predict: On</strong> or higher.</p>
       <ul>
-        <li><strong>Standard mode —</strong> a red bracket ring <img class="gi gi--red" src="images/chess2DInspectSourceSprite.png" style="width:20px;height:20px;" alt="( )"> appears on the black piece's own square; red <strong>dots</strong> mark safe empty squares it can reach; red <strong>diamonds</strong> <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"> mark attack-ray squares heading toward a white piece; <strong>large</strong> red diamonds <img class="gi gi--red" src="images/chessDiamondLarge.png" alt="◆"> appear directly above any white piece it could capture. The black piece gets a red tint and a <img class="gi" src="images/chess_hint_collision.png" alt="💥"> badge on 2D boards when it threatens a capture. Piece Labels (if on) also show the <img class="gi gi--red" src="images/chessDiamond.png" alt="◆"> on threatened white name tags.</li>
+        <li><strong>Standard mode —</strong> a red bracket ring <img class="gi" src="images/redBracketRing.png" style="width:20px;height:20px;" alt="( )"> appears on the black piece's own square; red <strong>dots</strong> mark safe empty squares it can reach; red <strong>diamonds</strong> <img class="gi" src="images/redChessDiamond.png" alt="◆"> mark attack-ray squares heading toward a white piece; <strong>large</strong> red diamonds <img class="gi" src="images/redChessDiamondLarge.png" alt="◆"> appear directly above any white piece it could capture. The black piece gets a red tint and a <img class="gi" src="images/chess_hint_collision.png" alt="💥"> badge on 2D boards when it threatens a capture. Piece Labels (if on) also show the <img class="gi" src="images/redChessDiamond.png" alt="◆"> on threatened white name tags.</li>
         <li><strong>Wizard + Predict: On —</strong> red glowing auras appear on the hovered piece and all its reachable squares; 2D boards show small red diamonds on every reachable empty square (not just attack rays), matching 3D aura coverage.</li>
         <li><strong>Wizard + Predict: Off —</strong> scout holds are fully disabled — nothing appears on 3D or 2D.</li>
       </ul>
@@ -679,14 +663,14 @@ Position: D3 (Move to H7?)</pre>
       <h3>Study another friendly piece (hold crosshair ~1 second)</h3>
       <p>Aim at a different <strong>white piece</strong> — not the one you are standing on — and hold about one second. Requires <strong>Predict: On</strong> or higher. Your standing piece keeps its own green move dots.</p>
       <ul>
-        <li><strong>Standard mode —</strong> a blue bracket ring <img class="gi gi--blue" src="images/chess2DInspectSourceSprite.png" style="width:20px;height:20px;" alt="( )"> appears on the white piece's own square; blue <strong>dots</strong> mark safe empty squares it can reach; blue <strong>diamonds</strong> <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"> mark attack-ray squares heading toward a black piece; <strong>large</strong> blue diamonds <img class="gi gi--blue" src="images/chessDiamondLarge.png" alt="◆"> appear directly above any black piece it could capture (pieces stay black — no blue tint; diamond art is tinted blue in-engine). Piece Labels (if on) also show the <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"> on threatened black name tags.</li>
+        <li><strong>Standard mode —</strong> a blue bracket ring <img class="gi" src="images/blueBracketRing.png" style="width:20px;height:20px;" alt="( )"> appears on the white piece's own square; blue <strong>dots</strong> mark safe empty squares it can reach; blue <strong>diamonds</strong> <img class="gi" src="images/blueChessDiamond.png" alt="◆"> mark attack-ray squares heading toward a black piece; <strong>large</strong> blue diamonds <img class="gi" src="images/blueChessDiamondLarge.png" alt="◆"> appear directly above any black piece it could capture (pieces stay black — no blue tint; diamond art is tinted blue in-engine). Piece Labels (if on) also show the <img class="gi" src="images/blueChessDiamond.png" alt="◆"> on threatened black name tags.</li>
         <li><strong>Wizard + Predict: On —</strong> blue glowing auras on the hovered white piece and all its reachable squares; 2D boards show small blue diamonds on every reachable empty square (not just attack rays), matching 3D aura coverage.</li>
         <li><strong>Wizard + Predict: Off —</strong> friendly inspect holds are fully disabled — nothing appears on 3D or 2D.</li>
       </ul>
       <p>Look away to dismiss.</p>
       <figure>
         <img src="images/17-white-inspect-hold.jpg" alt="Blue diamonds after holding crosshair on another white piece" loading="lazy" onerror="this.classList.add('missing')">
-        <figcaption>Optional: friendly inspect hold — <code>17-white-inspect-hold.jpg</code> (~1 s hold; small <img class="gi gi--blue" src="images/chessDiamond.png" alt="◆"> on empty squares, large <img class="gi gi--blue" src="images/chessDiamondLarge.png" alt="◆"> above threatened black pieces)</figcaption>
+        <figcaption>Optional: friendly inspect hold — <code>17-white-inspect-hold.jpg</code> (~1 s hold; small <img class="gi" src="images/blueChessDiamond.png" alt="◆"> on empty squares, large <img class="gi" src="images/blueChessDiamondLarge.png" alt="◆"> above threatened black pieces)</figcaption>
       </figure>
     </section>
 
