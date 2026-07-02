@@ -635,7 +635,9 @@ Position: D3</pre>
         green fades out as purple fades in, using the same rhythm as <strong style="color:var(--orange)">orange</strong> circles and tinted pieces.
         Purple dots are the same size as green dots and green capture diamonds.
         <strong style="color:var(--red)">Red</strong> and <strong style="color:var(--blue)">blue diamonds</strong> on the same square alternate with purple the same way.
-        Threatened white pieces under a large red scout diamond and threatened black pieces under a large blue inspect diamond <strong>ghost-pulse</strong> with that rhythm — the piece fades out when the diamond is at full brightness.
+        Threatened white pieces under a large red scout diamond and threatened black pieces under a large blue inspect diamond <strong>pulse</strong> with that rhythm.
+        On <strong>2D boards</strong>, pieces ghost (alpha-fade) when the diamond is at full brightness.
+        On the <strong>3D board</strong>, threatened white pieces glow <strong style="color:var(--red)">solid red</strong> and threatened black pieces glow <strong style="color:#7ab8ff">solid light blue</strong> — pulsing emission in sync with the diamond.
       </p>
 
       <p>For a full sprite-by-sprite glossary see <a href="#markers">Colored markers — quick reference</a> above.
@@ -664,7 +666,7 @@ Position: D3</pre>
       <h3>Study another friendly piece (hold crosshair ~1 second)</h3>
       <p>Aim at a different <strong>white piece</strong> — not the one you are standing on — and hold about one second. Requires <strong>Predict: On</strong> or higher. Your standing piece keeps its own green move dots.</p>
       <ul>
-        <li><strong>Standard mode —</strong> a blue bracket ring <img class="gi" src="images/blueBracketRing.png" style="width:20px;height:20px;" alt="( )"> appears on the white piece's own square; blue <strong>dots</strong> mark safe empty squares it can reach; blue <strong>diamonds</strong> <img class="gi" src="images/blueChessDiamond.png" alt="◆"> mark attack-ray squares heading toward a black piece; <strong>large</strong> blue diamonds <img class="gi" src="images/blueChessDiamondLarge.png" alt="◆"> appear directly above any black piece it could capture (pieces stay black — no blue tint; diamond art is tinted blue in-engine). Piece Labels (if on) also show the <img class="gi" src="images/blueChessDiamond.png" alt="◆"> on threatened black name tags.</li>
+        <li><strong>Standard mode —</strong> a blue bracket ring <img class="gi" src="images/blueBracketRing.png" style="width:20px;height:20px;" alt="( )"> appears on the white piece's own square; blue <strong>dots</strong> mark safe empty squares it can reach; blue <strong>diamonds</strong> <img class="gi" src="images/blueChessDiamond.png" alt="◆"> mark attack-ray squares heading toward a black piece; <strong>large</strong> blue diamonds <img class="gi" src="images/blueChessDiamondLarge.png" alt="◆"> appear directly above any black piece it could capture. On <strong>2D boards</strong>, threatened black pieces ghost with a <strong style="color:#7ab8ff">light-blue tint</strong>. On the <strong>3D board</strong>, threatened black pieces turn <strong style="color:#7ab8ff">solid light blue with pulsing blue emission</strong> in sync with the diamond. Piece Labels (if on) also show the <img class="gi" src="images/blueChessDiamond.png" alt="◆"> on threatened black name tags.</li>
         <li><strong>Wizard + Predict: On —</strong> blue glowing auras on the hovered white piece and all its reachable squares; 2D boards show small blue diamonds on every reachable empty square (not just attack rays), matching 3D aura coverage.</li>
         <li><strong>Wizard + Predict: Off —</strong> friendly inspect holds are fully disabled — nothing appears on 3D or 2D.</li>
       </ul>
@@ -915,7 +917,7 @@ Position: D3</pre>
 
       <p>
         During live play, the back mini board accepts <kbd>RMB</kbd> drag of <strong>White</strong> pieces to legal squares.
-        When a pawn reaches rank 8, the <strong>promotion panel</strong> opens automatically — use <kbd>W/A/S/D</kbd> to choose Queen, Rook, Knight, or Bishop, then <kbd>RMB</kbd> or <kbd>Space</kbd> to confirm.
+        When a pawn reaches rank 8, the <strong>promotion panel</strong> opens automatically — use <kbd>W/A/S/D</kbd> to choose Queen, Rook, Knight, or Bishop, then <kbd>RMB</kbd>, <kbd>Space</kbd>, or <kbd>RB</kbd> (gamepad) to confirm.
         The 3D board is always the primary input; the back mini board mirrors every move in real time.
       </p>
       <p>
